@@ -1,0 +1,86 @@
+{
+  "name": "test.echo-msz",
+  "version": "3.5.4",
+  "description": "webpage echo-msz.eu",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@tiptap/extension-color": "^2.0.0-beta.199",
+    "@tiptap/extension-highlight": "^2.0.0-beta.197",
+    "@tiptap/extension-link": "^2.0.0-beta.199",
+    "@tiptap/extension-text-align": "^2.0.0-beta.220",
+    "@tiptap/extension-text-style": "^2.0.0-beta.199",
+    "@tiptap/starter-kit": "^2.0.0-beta.197",
+    "@tiptap/vue-2": "^2.0.0-beta.197",
+    "assets-webpack-plugin": "^5.1.2",
+    "axios": "^0.21.4",
+    "bootstrap": "^5.3.0-alpha3",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "nette-forms": "^3.3.1",
+    "portal-vue": "^2.1.7",
+    "remixicon": "^2.5.0",
+    "vue": "^2.7.0",
+    "vue-dnd-zone": "^0.4.0",
+    "vue-session": "^1.0.0",
+    "vuedraggable": "^2.24.3",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "@babel/plugin-transform-async-to-generator": "^7.16.8",
+    "@babel/preset-env": "^7.15.8",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "cross-env": "^7.0.3",
+    "css-loader": "^5.2.7",
+    "css-minimizer-webpack-plugin": "^3.1.1",
+    "deepmerge": "^4.2.2",
+    "file-loader": "^6.2.0",
+    "jsonlylightbox": "^0.5.5",
+    "mini-css-extract-plugin": "^1.6.2",
+    "postcss": "^8.4.5",
+    "postcss-loader": "^6.2.1",
+    "raw-loader": "^4.0.2",
+    "resolve-url-loader": "^4.0.0",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
+    "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^4.2.3",
+    "url-loader": "^4.1.1",
+    "vue-loader": "^15.9.8",
+    "vue-template-compiler": "^2.6.14",
+    "vuetify-loader": "^1.7.3",
+    "webpack": "^5.76.0",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.3.1",
+    "webpack-merge": "^5.8.0"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack --mode development --progress --color",
+    "watch": "cross-env NODE_ENV=development webpack --mode development --watch --progress --color",
+    "serve": "cross-env NODE_ENV=development webpack-dev-server --mode development --hot --progress --color",
+    "serve-analyse": "cross-env WEBPACK_REPORT=1 NODE_ENV=development webpack-dev-server --mode development --hot --progress --color",
+    "build": "cross-env NODE_ENV=production webpack --mode production --progress --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://petak23@github.com/petak23/echo-msz.git"
+  },
+  "keywords": [
+    "echo",
+    "test"
+  ],
+  "author": "Ing. Peter Vojtech ml.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petak23/echo-msz/issues"
+  },
+  "homepage": "https://github.com/petak23/echo-msz#readme"
+}

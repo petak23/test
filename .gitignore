@@ -1,0 +1,12 @@
+config/local.neon
+config/database.neon
+deployment.ini
+deployment.log
+node_modules
+/log/
+/temp/
+/vendor/
+/_doc/
+/.vscode/
+/www/dist/
+/.history/
