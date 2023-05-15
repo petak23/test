@@ -1,20 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
 
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+	<title>{ifset title}{include title|stripHtml} | {/ifset}Meteo záhradka</title>
 	<link rel="stylesheet" type="text/css" href="{webpack front.css}">
 	<script src="{webpack front.js}"></script>
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+	<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+		<button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+						id="bd-theme"
+						type="button"
+						aria-expanded="false"
+						data-bs-toggle="dropdown"
+						aria-label="Zmeň tému vzhľadu (auto)">
+			<i class="fa-solid fa-circle-half-stroke"></i>
+			<span class="visually-hidden" id="bd-theme-text">Zmeň tému vzhľadu</span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+			<li>
+				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+					<i class="fa-solid fa-sun me-2 opacity-50"></i>
+					Svetlá
+					<i class="fa-solid fa-check ms-auto d-none"></i>
+				</button>
+			</li>
+			<li>
+				<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+					<i class="fa-solid fa-moon me-2 opacity-50"></i>
+					Tmavá
+					<i class="fa-solid fa-check ms-auto d-none"></i>
+				</button>
+			</li>
+			<li>
+				<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+					<i class="fa-solid fa-circle-half-stroke me-2 opacity-50"></i>
+					Auto
+					<i class="fa-solid fa-check ms-auto"></i>
+				</button>
+			</li>
+		</ul>
+	</div>
 
-	{include content}
+<header class="navbar navbar-dark bg-dark fixed-top sticky-top bg-dark  flex-md-nowrap p-0 shadow">
+	<div class="container-fluid ps-0">
+		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">MeteoZáhradka</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+			<i class="fa-solid fa-bars fa-sm"></i>
+		</button>
+		<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+			<div class="offcanvas-header">
+				<h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Profil petak23</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+					<li class="nav-item">
+						<a class="nav-link" n:href="Home:">Domov</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Profil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Odhlás sa...</a>
+					</li>
+					{*<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Dropdown
+						</a>
+						<ul class="dropdown-menu dropdown-menu-dark">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>
+						</ul>
+					</li>*}
+				</ul>
+				{*<form class="d-flex mt-3" role="search">
+					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-success" type="submit">Search</button>
+				</form>*}
+			</div>
+		</div>
+	</div>
+</header>
 
-	{block scripts}
-	{/block}
+<div class="container-fluid">
+	<div class="row">
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
+			<div class="position-sticky pt-3 sidebar-sticky">
+				<ul class="nav flex-column">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">
+							<span data-feather="home" class="align-text-bottom"></span>
+							Merania
+						</a>
+					</li>
+					{*<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file" class="align-text-bottom"></span>
+							Orders
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="shopping-cart" class="align-text-bottom"></span>
+							Products
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="users" class="align-text-bottom"></span>
+							Customers
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="bar-chart-2" class="align-text-bottom"></span>
+							Reports
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="layers" class="align-text-bottom"></span>
+							Integrations
+						</a>
+					</li>*}
+				</ul>
+
+				{*<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+					<span>Saved reports</span>
+					<a class="link-secondary" href="#" aria-label="Add a new report">
+						<span data-feather="plus-circle" class="align-text-bottom"></span>
+					</a>
+				</h6>
+				<ul class="nav flex-column mb-2">
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Current month
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Last quarter
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Social engagement
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text" class="align-text-bottom"></span>
+							Year-end sale
+						</a>
+					</li>
+				</ul>*}
+			</div>
+		</nav>
+
+		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+			{*<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>*}
+			
+			{include content}
+			
+		</main>
+	</div>
+</div>
+
+
+
+
+
 </body>
 </html>

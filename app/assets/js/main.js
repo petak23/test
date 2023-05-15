@@ -7,6 +7,6 @@ window.Nette = netteForms;
 netteForms.initOnLoad();
 
 //import './vue/MainVue.js';
-import './dashboard.js'
+//import './dashboard.js'
 
 import '../css/main.scss'

@@ -20,9 +20,10 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->meteo = $meteo;
 	}
 
-	public function renderDefault()
+	public function renderDefault(int $count = 10)
 	{
-		$this->template->meteo = $this->meteo->getMeasures();
+		$count_sensors = $this->meteo->getSensors()->count();
+		$this->template->meteo = $this->meteo->getMeasures($count * $count_sensors);
 	}
 
 	public function actionMeasure(String $message)

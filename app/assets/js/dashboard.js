@@ -1,5 +1,7 @@
 /* globals Chart:false, feather:false */
 
+const feather = require('feather-icons')
+
 (() => {
   'use strict'
 
