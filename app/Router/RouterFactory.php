@@ -16,6 +16,7 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 		$router->addRoute('measure/<message>', 'Home:measure');
+		$router->addRoute('measureenc/<message>', 'Home:measureEnc');
 		$router->addRoute('<presenter>/<action>[/<id>]', 'Home:default');
 		return $router;
 	}

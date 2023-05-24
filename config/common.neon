@@ -1,5 +1,29 @@
 parameters:
+	# Heslo, ktorým sa šifrujú heslá zariadení. Pozor, pokiaľ ho zmeníte, prídetee o nastavené heslá!!!
+	masterPassword: 'Heslo_pre456zakodovanie+++'
+	# Len pre informáciu pri grafoch
+	dataRetentionDays: 90
+	title: 'Meteo-záhradka'
+	minYear: 2021
+	# linky v päte stránky ak je link == '' tak len ako text
+	links:
+		- {
+			name: 'Github'
+			link: 'https://github.com/petak23/IoT-server'
+		}
+		- {
+			name: 'Domov'
+			link: 'http://iot.echo-msz.eu' 
+		}
+    # z jakych adres smi byt spusten cron
+	cronAllowed:
+		- 127.0.0.1
+		- 46.28.104.85 #wedos
+	# Povolenie registrácie	
+	reg_enabled: false
 
+	font: 'LiberationMono-Regular.ttf'
+	fontBold: 'LiberationMono-Bold.ttf'
 
 application:
 	errorPresenter: Error

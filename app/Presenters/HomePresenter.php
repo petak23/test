@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Services;
 use DbTable;
 use Nette;
 use Tracy\Debugger;
@@ -15,9 +16,13 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	/** DbTable\Meteo */
 	public $meteo;
 
-	public function __construct(DbTable\Meteo $meteo)
+	/** @var Services\Config */
+	private $config;
+
+	public function __construct(DbTable\Meteo $meteo, Services\Config $config)
 	{
 		$this->meteo = $meteo;
+		$this->config = $config;
 	}
 
 	public function renderDefault(int $count = 10)
@@ -67,6 +72,48 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	public function actionMeasureEnc(String $message)
 	{
+
+		$payload = explode(":", $message, 10);
+		if (count($payload) < 2) {
+			throw new \Exception("Bad request (2).");
+		}
+		/*$aesIvHex = Strings::trim($payload[0]);
+		//D $logger->write( Logger::INFO, "iv: {$aesIvHex}");
+		//$aesIV = hex2bin($aesIvHex);
+		$aesIV = hash("sha256", $aesIvHex, true);
+		//$aesIV = hex2bin($aesIV);
+		$aesIV = substr($aesIV, 0, 16);
+		dump($aesIV);*/
+
+		//$aesDataHex = Strings::trim($payload[1]);
+		//D $logger->write( Logger::INFO, "data: {$aesDataHex}");
+		//$aesData = hex2bin($aesDataHex);
+
+		/*$aesKey =	hash("sha256", self::DEVICE_ID . self::PASS_PHRASE, true);
+		//$aesKey = hex2bin($aesKey);
+		dump($aesKey);
+
+		$decrypted = openssl_decrypt(
+			hex2bin($aesDataHex),
+			'AES-256-CBC',
+			$aesKey,
+			OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
+			$aesIV
+		);*/
+		$this->config->setDeviceId(self::DEVICE_ID);
+		$decrypted = $this->config->decrypt(Strings::trim($payload[1]), Strings::trim($payload[0]));
+
+		if ($decrypted == FALSE) {
+			//$logger->write(Logger::ERROR,  "nelze rozbalit");
+			throw new \Exception("Bad crypto block (1).");
+		}
+		dumpe($decrypted);
+		$httpResponse = $this->getHttpResponse();
+		$httpResponse->setCode(Nette\Http\IResponse::S200_OK);
+		$httpResponse->setContentType('text/plain', 'UTF-8');
+		$response = new \Nette\Application\Responses\TextResponse("OK: ");
+		$this->sendResponse($response);
+		$this->terminate();
 	}
 
 	/**

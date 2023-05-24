@@ -8,5 +8,6 @@ netteForms.initOnLoad();
 
 //import './vue/MainVue.js';
 //import './dashboard.js'
+import './color-modes.js'
 
 import '../css/main.scss'
