@@ -9,4 +9,5 @@ search:
 services:
 	- App\Router\RouterFactory::createRouter
 	- App\Services\Config( %cronAllowed%, %masterPassword%, %links%, %title%, %font%, %fontBold%, %dataRetentionDays%,  %minYear%, %reg_enabled%)
+	- DbTable\Main_menu
 	- DbTable\Meteo	

@@ -64,9 +64,14 @@ class Config
 	}
 
 
-	private function getMasterKey(): string
+	/*private*/
+	public function getMasterKey(): string
 	{
-		return hash("sha256", $this->device_id . $this->masterPassword/* . 'RatatoskrIoT'*/, true);
+		return $this->masterPassword;
+		//$fullPwd = $this->device_id . $this->masterPassword;
+		//dump($fullPwd, strlen($fullPwd));
+		//$aba = hash("sha256", $this->device_id . $this->masterPassword, true);
+		//return $aba; //substr($aba, 0, 32);
 	}
 
 	public function encrypt(string $data, string $fieldName): string
@@ -82,14 +87,18 @@ class Config
 
 	public function decrypt(string $data, string $fieldName): string|false
 	{
+		//dump($data, $fieldName);
 		$aesIV = substr(hash("sha256", $fieldName, true), 0, 16);
 		$aesKey = $this->getMasterKey();
-
-		$decrypted = openssl_decrypt(hex2bin($data), 'AES-256-CBC', $aesKey, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $aesIV);
-		if ($decrypted == FALSE) {
+		dump($aesIV);
+		//dump($aesKey);
+		$bindata = hex2bin($data);
+		//dump($bindata);
+		$decrypted = openssl_decrypt($bindata, 'AES-256-CBC', $aesKey, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $aesIV); //| OPENSSL_ZERO_PADDING
+		/*if ($decrypted == FALSE) {
 			//Logger::log('webapp', Logger::ERROR, "nelze desifrovat");
 			return "";
-		}
+		}*/
 		return $decrypted;
 	}
 }

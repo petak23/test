@@ -1,13 +1,13 @@
 {block content}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h2" n:block=title>Merania!</h1>
+	<h1 class="h2" n:block=title>Zoznam zariadení!</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
-		<div class="btn-group me-2">
+		{*<div class="btn-group me-2">
 			Posledných meraní:&nbsp;
 			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 10">10</a>
 			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 20">20</a>
 			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 50">50</a>
-		</div>
+		</div>*}
 		{*<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
 			<span data-feather="calendar" class="align-text-bottom"></span>
 			This week
@@ -16,25 +16,29 @@
 </div>
 
 <div id="content" class="table-responsive">
-	{if count($meteo)}
+	{if count($devices)}
 		<table class="table table-striped table-sm"> 
 			<tr>
-				<th>Zariadenie</th>
-				<th>D/T</th>
-				<th>°C</th>
-				<th>%</th>
-				<th>hPa</th>
-				<th>Lx</th>
+				<th>Meno</th>
+				<th>Meno v zariadení</th>
+				<th>Popis</th>
+				<th>Senzory</th>
+				<th></th>
 			</tr>
-			<tr n:foreach="$meteo as $item">
-				<td>{$item['device']}</td>
-				<td>{$item['time']|date:'d.m.Y H:i:s'}</td>
-				<td n:foreach="$item['sensors'] as $i => $v">
-					{$v}
+			<tr n:foreach="$devices as $item">
+				<td>{$item['info']->name}</td>
+				<td>{$item['info']->device_name}</td>
+				<td>{$item['info']->description}</td>
+				{*<td>{$item['time']|date:'d.m.Y H:i:s'}</td>*}
+				<td n:foreach="$item['sensors'] as $v">
+					{$v->value_type->shortcut}{sep},{/sep}{dump $v}
+				</td>
+				<td>
+					<a n:href="Device:device $item['info']->id">Info</a>
 				</td>
 			</tr>
 		</table>
 	{else}
-		<h2>Nie sú žiadne dáta</h2>
+		<h2>Nie sú žiadne zariadenia.</h2>
 	{/if}
 </div>

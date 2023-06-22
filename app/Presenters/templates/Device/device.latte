@@ -1,0 +1,70 @@
+{block content}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h2" n:block=title>Info. o zariadení: {$device['info']->device_name}</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+		{*<div class="btn-group me-2">
+			Posledných meraní:&nbsp;
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 10">10</a>
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 20">20</a>
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 50">50</a>
+		</div>*}
+		{*<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+			<span data-feather="calendar" class="align-text-bottom"></span>
+			This week
+		</button>*}
+	</div>
+</div>
+
+<div id="content" class="table-responsive">
+	{if $device}
+		<table class="table table-striped table-sm"> 
+			<tr>
+				<th>Meno</th><td>{$device['info']->name}</td>
+			</tr>
+			<tr>
+				<th>Meno v zariadení</th><td>{$device['info']->device_name}</td>
+			</tr>
+			<tr>	
+				<th>Popis</th><td>{$device['info']->description}</td>
+			</tr>
+			<tr>	
+				<th>Prvé prihlásenie</th><td>{$device['info']->first_login|date:'d.m.Y H:i:s'}</td>
+			</tr>
+			<tr>	
+				<th>Posledné prihlásenie</th><td>{$device['info']->last_login|date:'d.m.Y H:i:s'}</td>
+			</tr>
+			<tr>
+				<th>Heslo</th><td>{$device['info']->password}</td>
+			</tr>
+			<tr>
+				<th>Senzory:</th>
+				<td>
+					<table class="table table-striped table-sm">
+						<tr>
+							<th>Popis</th>
+							<th>Posledná poslaná hodnota</th>
+							<th>Jednotka (skratka)</th>
+							<th>Čas posledných dát</th>
+						</tr>
+						<tr n:foreach="$device['sensors'] as $v">
+							<td>
+								{$v->description}
+							</td>
+							<td>
+								{$v->last_out_value}
+							</td>
+							<td>
+								{$v->value_type->unit} ({$v->value_type->shortcut})
+							</td>
+							<td>
+								{$v->last_data_time|date:'d.m.Y H:i:s'}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	{else}
+		<h2>Nie sú žiadne zariadenia.</h2>
+	{/if}
+</div>

@@ -4,24 +4,33 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Exceptions;
 use App\Services;
 use DbTable;
+use Exception;
 use Nette;
 use Tracy\Debugger;
+use Nette\Utils\Json;
 use Nette\Utils\Strings;
-
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
 	/** DbTable\Meteo */
 	public $meteo;
 
+	/** DbTable\Main_menu */
+	public $main_menu;
+
 	/** @var Services\Config */
 	private $config;
 
-	public function __construct(DbTable\Meteo $meteo, Services\Config $config)
-	{
+	public function __construct(
+		DbTable\Meteo $meteo,
+		DbTable\Main_menu $main_menu,
+		Services\Config $config
+	) {
 		$this->meteo = $meteo;
+		$this->main_menu = $main_menu;
 		$this->config = $config;
 	}
 
@@ -31,40 +40,66 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->template->meteo = $this->meteo->getMeasures($count * $count_sensors);
 	}
 
-	public function actionMeasure(String $message)
+	public function renderDevices()
 	{
-		$tmp = explode(";", $message, 6);
-		/*String message = "TE:" + String(temperature) + ";HU:" + String(humidity);
-  	message += ";AP:" + String(abs_pressure) + ";RP:" + String(rel_pressure);
-  	message += ";AL:" + String(altitude);*/
-		//dumpe($tmp);
-		foreach ($tmp as $v) {
-			$m = explode(":", $v);
-			if (count($m) == 2) {
-				if ($m[0] == "TE") {
+		$this->template->devices = $this->meteo->getDevices();
+	}
+
+	function beforeRender()
+	{
+		$this->template->main_menu = $this->main_menu->getMenu();
+	}
+
+	public function renderTest()
+	{
+		try {
+			$cont = "{\"HU\":\"62.0\",\"TE\":\"24.90\",\"data_time\":\"22.06.2023 12:19:28\",\"out_time\":\"Poslené meranie: 22.06.2023 12:19:28\",\"device_id\":\"dht_11_doma\",\"enc_message\":\"497656656b746f723200000000000000:cc0c88f9f01c7475825c0e4c7a049c5083389fd69868a7910e119de3c2365cc7\"}\u0000";
+
+			$c = explode("}", (string)$cont)[0] . "}";
+			$items = json_decode($c, true);
+			if (!isset($items['device_id']))
+				throw new Exceptions\DeviceNotFoundException("Not correct JSON: '{$cont}'!", 1);
+
+			$device = $this->meteo->getDeviceByDeviceName("dht_11_doma");
+			$device_sensors = $this->meteo->getDeviceSensors($device->id);
+			/*foreach ($device['sensors'] as $sensor) {
+				dump($sensor);
+				if (isset($items[$sensor->value_type->shortcut])) {
 					$this->meteo->pridaj([
-						"id_sensor"	=>	1,
-						"s_value"	=> $m[1]
-					]);
-				} elseif ($m[0] == "HU") {
-					$this->meteo->pridaj([
-						"id_sensor"	=>	2,
-						"s_value"	=> $m[1]
-					]);
-				} elseif ($m[0] == "RP") {
-					$this->meteo->pridaj([
-						"id_sensor"	=>	3,
-						"s_value"	=> $m[1]
-					]);
-				} elseif ($m[0] == "LX") {
-					$this->meteo->pridaj([
-						"id_sensor"	=>	4,
-						"s_value"	=> $m[1]
+						"id_sensor"	=>	$sensor->id_value_type,
+						"s_value"	=> $items[$sensor->value_type->shortcut]
 					]);
 				}
-			}
+			}*/
+			dump($items);
+			dump($device);
+			dumpe($device_sensors);
+		} catch (Exceptions\DeviceNotFoundException $th) {
+			dumpe($th->getMessage());
 		}
-		//$this->redirect("Home:default");
+	}
+
+	public function actionMeasurePost(String $message = null)
+	{
+		$httpRequest = $this->getHttpRequest();
+
+		$remoteIp = $httpRequest->getRemoteAddress();
+
+		$cont = $httpRequest->getRawBody();
+		try {
+			$out = $this->meteo->recordMeasuresJson($cont);
+			$m = [
+				"status"  => 200,
+				"out" => $out,
+				//"rawBody" => (string)$cont,
+			];
+		} catch (Nette\Utils\JsonException $e) {
+			$m = ["status"  => 500, 'err_msg' => "Chyba dekódovania json", "rawBody" => $cont];
+		} catch (Exceptions\DeviceNotFoundException $th) {
+			$m = ["status"  => 500, 'err_msg' => $th->getMessage(), "rawBody" => $cont];
+		}
+
+		$this->sendJson($m);
 	}
 
 	const DEVICE_ID = "134679";											 	// Dočasné nastavenie, kým sa nevyrieši prenos kľúčov...
@@ -73,41 +108,54 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	public function actionMeasureEnc(String $message)
 	{
 
-		$payload = explode(":", $message, 10);
+		$this->config->setDeviceId(self::DEVICE_ID);
+
+		/*$payload = explode(":", $message, 10);
 		if (count($payload) < 2) {
 			throw new \Exception("Bad request (2).");
 		}
-		/*$aesIvHex = Strings::trim($payload[0]);
-		//D $logger->write( Logger::INFO, "iv: {$aesIvHex}");
-		//$aesIV = hex2bin($aesIvHex);
-		$aesIV = hash("sha256", $aesIvHex, true);
-		//$aesIV = hex2bin($aesIV);
-		$aesIV = substr($aesIV, 0, 16);
-		dump($aesIV);*/
+		dump($payload[0]);
+		dump($payload[1]);
+		
+		$mes = "TE:25.00;HU:52.00";
+		dump($mes);
+		$encr = $this->config->encrypt($mes, Strings::trim($payload[0]));
+		dump($encr);
 
-		//$aesDataHex = Strings::trim($payload[1]);
-		//D $logger->write( Logger::INFO, "data: {$aesDataHex}");
-		//$aesData = hex2bin($aesDataHex);
+		$decrypted = $this->config->decrypt($encr, Strings::trim($payload[0]));
+		dump($decrypted);
 
-		/*$aesKey =	hash("sha256", self::DEVICE_ID . self::PASS_PHRASE, true);
-		//$aesKey = hex2bin($aesKey);
-		dump($aesKey);
-
-		$decrypted = openssl_decrypt(
-			hex2bin($aesDataHex),
-			'AES-256-CBC',
-			$aesKey,
-			OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
-			$aesIV
-		);*/
-		$this->config->setDeviceId(self::DEVICE_ID);
 		$decrypted = $this->config->decrypt(Strings::trim($payload[1]), Strings::trim($payload[0]));
+		dumpe($decrypted);*/
+
+		$decrypted = $this->decryptDataBlock($message, $this->config->getMasterKey());
 
 		if ($decrypted == FALSE) {
 			//$logger->write(Logger::ERROR,  "nelze rozbalit");
 			throw new \Exception("Bad crypto block (1).");
 		}
-		dumpe($decrypted);
+
+		dump(bin2hex($decrypted));
+		dump(bin2hex($decrypted[4]), bin2hex($decrypted[5]));
+		dump(ord($decrypted[4]) << 8, ord($decrypted[5]));
+		$dataLen = (ord($decrypted[4]) << 8) | ord($decrypted[5]);
+		//D $logger->write( Logger::INFO,  "data len {$dataLen}" );
+		dump($dataLen);
+
+		$crcReceived = bin2hex(substr($decrypted, 0, 4));
+		$msgTotal = substr($decrypted, 6, $dataLen);
+		$hash = hash("crc32b", $msgTotal, FALSE);
+		dump($hash);
+		dump($crcReceived);
+		dump(bin2hex($msgTotal));
+
+		if (strcmp($hash, $crcReceived) != 0) {
+			//$logger->write(Logger::ERROR,  "Nesouhlasi CRC. Prijato: {$crcReceived} Spocteno: {$hash}");
+			throw new \Exception("Bad CRC.");
+		}
+
+
+		dumpe($msgTotal);
 		$httpResponse = $this->getHttpResponse();
 		$httpResponse->setCode(Nette\Http\IResponse::S200_OK);
 		$httpResponse->setContentType('text/plain', 'UTF-8');
@@ -137,17 +185,30 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		}
 		$aesIvHex = Strings::trim($payload[0]);
 		//D $logger->write( Logger::INFO, "iv: {$aesIvHex}");
+		//$aesIV /*Hex*/ = substr(hash("sha256", Strings::trim($payload[0]), true), 0, 16);
 		$aesIV = hex2bin($aesIvHex);
+		dump($aesIV);
 
 		$aesDataHex = Strings::trim($payload[1]);
 		//D $logger->write( Logger::INFO, "data: {$aesDataHex}");
 		$aesData = hex2bin($aesDataHex);
+		dump($aesData);
+		//$key = hex2bin($sessionKey);
+		$key = $sessionKey;
+		dump($key);
+		$decrypted = openssl_decrypt(
+			$aesData,
+			'AES-256-CBC',
+			$key,
+			OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
+			$aesIV
+		);
 
-		$decrypted = openssl_decrypt($aesData, 'AES-256-CBC', hex2bin($sessionKey), OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $aesIV);
 		if ($decrypted == FALSE) {
 			//$logger->write(Logger::ERROR,  "nelze rozbalit");
 			throw new \Exception("Bad crypto block (1).");
 		}
+
 
 		$dataLen = (ord($decrypted[4]) << 8) | ord($decrypted[5]);
 		//D $logger->write( Logger::INFO,  "data len {$dataLen}" );
@@ -155,7 +216,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$crcReceived = bin2hex(substr($decrypted, 0, 4));
 		$msgTotal = substr($decrypted, 6, $dataLen);
 		$hash = hash("crc32b", $msgTotal, FALSE);
-
+		dumpe($msgTotal);
 		if (strcmp($hash, $crcReceived) != 0) {
 			//$logger->write(Logger::ERROR,  "Nesouhlasi CRC. Prijato: {$crcReceived} Spocteno: {$hash}");
 			throw new \Exception("Bad CRC.");
