@@ -15,8 +15,8 @@ final class RouterFactory
 	public static function createRouter(): RouteList
 	{
 		$router = new RouteList;
-		$router->addRoute('measureenc/<message>', 'Home:measureEnc');
-		$router->addRoute('measurepost[/<message>]', 'Home:measurePost');
+		$router->addRoute('measureenc/<message>', 'Measure:measureEnc');
+		$router->addRoute('measurepost[/<message>]', 'Measure:measurePost');
 		$router->addRoute('devices', 'Device:devices');
 		$router->addRoute('device/<id>', 'Device:device');
 		$router->addRoute('<presenter>/<action>[/<id>]', 'Home:default');

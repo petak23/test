@@ -30,11 +30,13 @@
 				<td>{$item['info']->device_name}</td>
 				<td>{$item['info']->description}</td>
 				{*<td>{$item['time']|date:'d.m.Y H:i:s'}</td>*}
-				<td n:foreach="$item['sensors'] as $v">
+				<td n:inner-foreach="$item['sensors'] as $v">
 					{$v->value_type->shortcut}{sep},{/sep}{dump $v}
 				</td>
 				<td>
-					<a n:href="Device:device $item['info']->id">Info</a>
+					<a n:href="Device:device $item['info']->id" title="Info">
+						<i class="fa-solid fa-circle-info"></i>
+					</a>
 				</td>
 			</tr>
 		</table>

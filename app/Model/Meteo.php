@@ -8,13 +8,13 @@ use App\Exceptions;
 /**
  * Model, ktory sa stara o tabulky
  * 
- * Posledna zmena 05.01.2023
+ * Posledna zmena 29.06.2023
  * 
  * @author     Ing. Peter VOJTECH ml. <petak23@gmail.com>
  * @copyright  Copyright (c) 2012 - 2023 Ing. Peter VOJTECH ml.
  * @license
  * @link       http://petak23.echo-msz.eu
- * @version    1.0.6
+ * @version    1.0.7
  */
 class Meteo extends Table
 {
@@ -28,12 +28,13 @@ class Meteo extends Table
 	/** Nette\Database\Table\Selection */
 	public $value_types;
 
-	public function __construct(Nette\Database\Explorer $db)
+	public function __construct(Nette\Database\Explorer $db, Nette\Security\User $user)
 	{
 		parent::__construct($db);
 		$this->devices = $this->connection->table("devices");
 		$this->sensors = $this->connection->table("sensors");
 		$this->value_types = $this->connection->table("value_types");
+		$this->user = $user;
 	}
 
 	public function getSensors(): Nette\Database\Table\Selection

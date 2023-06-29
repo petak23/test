@@ -1,0 +1,102 @@
+{block content}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h2" n:block=title>Domáca stránka</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+		{*<div class="btn-group me-2">
+			Posledných meraní:&nbsp;
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 10">10</a>
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 20">20</a>
+			<a type="button" class="btn btn-sm btn-outline-secondary" n:href="Home: count: 50">50</a>
+		</div>*}
+		{*<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+			<span data-feather="calendar" class="align-text-bottom"></span>
+			This week
+		</button>*}
+	</div>
+</div>
+
+<div id="content">
+	<div class="row row-cols-1 row-cols-md-3 g-4">
+		<div class="col">
+			<div class="card h-100">
+				<img src="{$basePath}/www/images/zariadenie.png" class="card-img-top" alt="Zariadenia">
+				<div class="card-body">
+					<h5 class="card-title">Pripojené zariadenia</h5>
+					<p class="card-text">
+						{if count($devices)}
+							Zariadenia pripojené k serveru.
+						{else}
+							Žiadne pripojené zariadenie
+						{/if}
+					</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item" n:foreach="$devices as $d">
+						<div class="d-flex justify-content-between">
+							{$d['info']->name}
+							<a 	n:href="Device:device $d['info']->id"
+									title="Info. o zariadení: {$d['info']->name}"
+							>
+								<i class="fa-solid fa-circle-info ps-2"></i>	
+							</a>
+						</div>
+					</li>
+				</ul>
+				<div class="card-body">
+					<a n:href="Device:" class="card-link">Viac informácií</a>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a short card.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{*<div id="content" class="table-responsive">
+	{if count($meteo)}
+		<table class="table table-striped table-sm"> 
+			<tr>
+				<th>Zariadenie</th>
+				<th>D/T</th>
+				<th>°C</th>
+				<th>%</th>
+				<th>hPa</th>
+				<th>Lx</th>
+			</tr>
+			<tr n:foreach="$meteo as $item">
+				<td>{$item['device']}</td>
+				<td>{$item['time']|date:'d.m.Y H:i:s'}</td>
+				<td n:foreach="$item['sensors'] as $i => $v">
+					{$v}
+				</td>
+			</tr>
+		</table>
+	{else}
+		<h2>Nie sú žiadne dáta</h2>
+	{/if}
+</div>*}

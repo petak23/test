@@ -7,7 +7,18 @@ search:
 
 
 services:
+	- App\Model\UserManager
+	authorizator: DbTable\AuthorizatorFactory::create(@Nette\Database\Context)
+
 	- App\Router\RouterFactory::createRouter
 	- App\Services\Config( %cronAllowed%, %masterPassword%, %links%, %title%, %font%, %fontBold%, %dataRetentionDays%,  %minYear%, %reg_enabled%)
 	- DbTable\Main_menu
-	- DbTable\Meteo	
+	- DbTable\Meteo
+	- DbTable\PV_User_permission
+	- DbTable\PV_User_resource
+	- DbTable\PV_User_roles
+	- DbTable\User_main
+	- DbTable\User_prihlasenie
+	- DbTable\User_profiles
+
+	- App\Forms\User\SignInFormFactory

@@ -11,7 +11,6 @@
 </head>
 
 <body>
-	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 	<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
 		<button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
 						id="bd-theme"
@@ -50,12 +49,32 @@
 <header class="navbar navbar-dark bg-dark fixed-top sticky-top bg-dark  flex-md-nowrap p-0 shadow">
 	<div class="container-fluid ps-0">
 		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">MeteoZáhradka</a>
+		<form class="row g-3" n:if="!$user->isLoggedIn()" n:name="signInForm">
+			<div class="col-auto">
+				<label for="staticEmail2" class="visually-hidden">Email</label>
+				<input n:name="email" class="form-control form-control-sm" placeholder="email@example.com">
+			</div>
+			<div class="col-auto">
+				<label for="inputPassword2" class="visually-hidden">Password</label>
+				<input n:name="password" class="form-control form-control-sm" placeholder="Heslo...">
+			</div>
+			<div class="col-auto">
+				<button n:name="login" type="submit" class="btn btn-secondary btn-sm mt-2">Prihlás</button>
+			</div>
+		</form>
+		<div n:if="$user->isLoggedIn()">Prihlásený užívateľ: {$user->getIdentity()->email}</div>
 		<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
 			<i class="fa-solid fa-bars fa-sm"></i>
 		</button>
 		<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
 			<div class="offcanvas-header">
-				<h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Profil petak23</h5>
+				<h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
+					{if $user->isLoggedIn()}
+						Profil {$user->getIdentity()->email}
+					{else}
+						Neprihlásený hosť
+					{/if}
+				</h5>
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 			</div>
 			<div class="offcanvas-body">
@@ -63,11 +82,11 @@
 					<li class="nav-item">
 						<a class="nav-link" n:href="Home:">Domov</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Profil</a>
+					<li class="nav-item" n:if="$user->isLoggedIn()">
+						{*<a class="nav-link" n:href="User:">Profil</a>*}
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Odhlás sa...</a>
+					<li class="nav-item" n:if="$user->isLoggedIn()">
+						<a class="nav-link" n:href="Home:signOut">Odhlás sa...</a>
 					</li>
 					{*<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -96,6 +115,7 @@
 	<div class="row">
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
 			<div class="position-sticky pt-3 sidebar-sticky">
+				<h6 class="ms-2">Hlavná ponuka</h6>
 				<ul class="nav flex-column" n:inner-foreach="$main_menu as $mi">
 					<li class="nav-item">
 						<a class="nav-link active" aria-current="page" n:href="$mi->link">
@@ -103,36 +123,6 @@
 							{$mi->name}
 						</a>
 					</li>
-					{*<li class="nav-item">
-						<a class="nav-link" href="#">
-							<span data-feather="file" class="align-text-bottom"></span>
-							Orders
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">
-							<span data-feather="shopping-cart" class="align-text-bottom"></span>
-							Products
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">
-							<span data-feather="users" class="align-text-bottom"></span>
-							Customers
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">
-							<span data-feather="bar-chart-2" class="align-text-bottom"></span>
-							Reports
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">
-							<span data-feather="layers" class="align-text-bottom"></span>
-							Integrations
-						</a>
-					</li>*}
 				</ul>
 
 				{*<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
@@ -171,8 +161,16 @@
 		</nav>
 
 		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-			{*<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>*}
-			
+			<div class="row" n:if="count($flashes)"> 
+				<div class="col-12 my-2" n:inner-foreach="$flashes as $flash">
+					{var $nees = explode(',', $flash->type)}
+					<div class="alert alert-{$nees[0]} alert-dismissible fade show mb-0" role="alert">
+						{if isset($nees[1]) && $nees[1] == 'n'}{$flash->message|noescape}{else}{$flash->message}{/if}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+
 			{include content}
 			
 		</main>
