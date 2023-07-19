@@ -11,7 +11,7 @@ use Nette\Application\UI;
 /**
  * Zakladny presenter pre vsetky presentery
  * 
- * Posledna zmena(last change): 26.06.2023
+ * Posledna zmena(last change): 19.07.2023
  *
  * Modul: ADMIN
  *
@@ -19,7 +19,7 @@ use Nette\Application\UI;
  * @copyright  Copyright (c) 2012 - 2023 Ing. Peter VOJTECH ml.
  * @license
  * @link       http://petak23.echo-msz.eu
- * @version 1.0.0
+ * @version 1.0.1
  */
 abstract class BasePresenter extends UI\Presenter
 {
@@ -41,6 +41,8 @@ abstract class BasePresenter extends UI\Presenter
 		} else {
 			$this->template->allowed = true;
 		}
+
+		$this->template->db_info_link = $this->main_menu->getDBInfo();
 
 		$this->template->main_menu = $this->main_menu->getMenu();
 	}

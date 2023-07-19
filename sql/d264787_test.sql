@@ -23,8 +23,8 @@ CREATE TABLE `devices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_slovak_ci COMMENT='List of devices. Device has one or more Sensors.';
 
 INSERT INTO `devices` (`id`, `id_user_main`, `name`, `device_name`, `description`, `first_login`, `last_login`, `password`) VALUES
-(1,	1,	'Záhradka BMP 280',	'zahradka_bmp_280',	'Meteo na záhradke',	'2023-07-19 13:52:00',	'2023-07-19 14:05:00',	NULL),
-(2,	1,	'DHT 11 doma',	'dht_11_doma',	'Testovací teplomer doma',	'2023-06-21 12:17:06',	'2023-07-19 14:05:01',	'KluKfn48d');
+(1,	1,	'Záhradka BMP 280',	'zahradka_bmp_280',	'Meteo na záhradke',	'2023-07-19 13:52:00',	'2023-07-19 14:25:00',	NULL),
+(2,	1,	'DHT 11 doma',	'dht_11_doma',	'Testovací teplomer doma',	'2023-06-21 12:17:06',	'2023-07-19 14:25:01',	'KluKfn48d');
 
 DROP TABLE IF EXISTS `main_menu`;
 CREATE TABLE `main_menu` (
@@ -32,13 +32,14 @@ CREATE TABLE `main_menu` (
   `name` varchar(30) CHARACTER SET utf32 COLLATE utf32_slovak_ci NOT NULL COMMENT 'Názov položky',
   `web_name` varchar(50) CHARACTER SET utf32 COLLATE utf32_slovak_ci NOT NULL COMMENT 'Webový názov položky',
   `link` varchar(50) CHARACTER SET utf32 COLLATE utf32_slovak_ci NOT NULL COMMENT 'Odkaz',
+  `icon` varchar(70) CHARACTER SET utf32 COLLATE utf32_slovak_ci DEFAULT NULL COMMENT 'Ikonka z fontawesome (komplet class)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_slovak_ci;
 
-INSERT INTO `main_menu` (`id`, `name`, `web_name`, `link`) VALUES
-(1,	'Domov',	'home',	'Home:'),
-(2,	'Zariadenia',	'devices',	'Device:devices'),
-(3,	'Merania',	'measures',	'Home:measures');
+INSERT INTO `main_menu` (`id`, `name`, `web_name`, `link`, `icon`) VALUES
+(1,	'Domov',	'home',	'Home:',	'fa-solid fa-house'),
+(2,	'Zariadenia',	'devices',	'Device:devices',	'fa-solid fa-walkie-talkie'),
+(3,	'Merania',	'measures',	'Home:measures',	'fa-solid fa-scale-unbalanced-flip');
 
 DROP TABLE IF EXISTS `measures`;
 CREATE TABLE `measures` (
@@ -73,12 +74,12 @@ CREATE TABLE `sensors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_slovak_ci COMMENT='List of sensors. Each sensor is a part of one DEVICE.';
 
 INSERT INTO `sensors` (`id`, `id_devices`, `name`, `id_value_type`, `description`, `last_data_time`, `last_out_value`, `imp_count`) VALUES
-(1,	1,	'Teplota',	1,	'Teplota vonku',	'2023-07-19 14:05:00',	28.559999465942,	NULL),
-(2,	1,	'Vlhkosť',	2,	'Vlhkosť vonku',	'2023-07-19 14:05:00',	36.8935546875,	NULL),
-(3,	1,	'Tlak',	3,	'Tlak relatívny',	'2023-07-19 14:05:00',	1015.2836303711,	NULL),
-(4,	1,	'Osvetlenie',	4,	'Intenzita osvetlenia',	'2023-07-19 14:05:00',	0,	NULL),
-(5,	2,	'Teplota',	1,	'Teplota dht 11',	'2023-07-19 14:05:01',	27.5,	NULL),
-(6,	2,	'Vlhkosť',	2,	'Vlhkosť dht 11',	'2023-07-19 14:05:01',	41,	NULL);
+(1,	1,	'Teplota',	1,	'Teplota vonku',	'2023-07-19 14:25:00',	28.159999847412,	NULL),
+(2,	1,	'Vlhkosť',	2,	'Vlhkosť vonku',	'2023-07-19 14:25:00',	40.1162109375,	NULL),
+(3,	1,	'Tlak',	3,	'Tlak relatívny',	'2023-07-19 14:25:00',	1014.9859008789,	NULL),
+(4,	1,	'Osvetlenie',	4,	'Intenzita osvetlenia',	'2023-07-19 14:25:00',	0,	NULL),
+(5,	2,	'Teplota',	1,	'Teplota dht 11',	'2023-07-19 14:25:01',	28.799999237061,	NULL),
+(6,	2,	'Vlhkosť',	2,	'Vlhkosť dht 11',	'2023-07-19 14:25:01',	43,	NULL);
 
 DROP TABLE IF EXISTS `user_main`;
 CREATE TABLE `user_main` (
@@ -237,4 +238,4 @@ INSERT INTO `value_types` (`id`, `unit`, `shortcut`) VALUES
 (3,	'hPa',	'RP'),
 (4,	'lx',	'LX');
 
--- 2023-07-19 12:05:01
+-- 2023-07-19 12:25:53
