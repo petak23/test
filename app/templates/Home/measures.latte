@@ -30,7 +30,7 @@
 				<td>{$item['device']}</td>
 				<td>{$item['time']|date:'d.m.Y H:i:s'}</td>
 				<td n:foreach="$item['sensors'] as $i => $v">
-					{$v}
+					{$v|number:2,',',''}
 				</td>
 			</tr>
 		</table>

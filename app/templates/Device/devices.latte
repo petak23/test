@@ -26,7 +26,7 @@
 				<th></th>
 			</tr>
 			<tr n:foreach="$devices as $item">
-				<td>{$item['info']->name}</td>
+				<td><a n:href="Device:device $item['info']->id" title="Info">{$item['info']->name}</a></td>
 				<td>{$item['info']->device_name}</td>
 				<td>{$item['info']->description}</td>
 				{*<td>{$item['time']|date:'d.m.Y H:i:s'}</td>*}

@@ -27,11 +27,25 @@
 			<tr>	
 				<th>Popis</th><td>{$device['info']->description}</td>
 			</tr>
-			<tr>	
-				<th>Prvé prihlásenie</th><td>{$device['info']->first_login|date:'d.m.Y H:i:s'}</td>
+			<tr>
+				<th>Prvé prihlásenie</th>
+				<td>
+					{if $device['info']->first_login != null}
+						{$device['info']->first_login|date:'d.m.Y H:i:s'}
+					{else}
+						<span class="text-warning">Zariadenie sa ešte neprihlásilo</span>
+					{/if}
+				</td>
 			</tr>
 			<tr>	
-				<th>Posledné prihlásenie</th><td>{$device['info']->last_login|date:'d.m.Y H:i:s'}</td>
+				<th>Posledné prihlásenie</th>
+				<td>
+					{if $device['info']->last_login != null}
+						{$device['info']->last_login|date:'d.m.Y H:i:s'}
+					{else}
+						<span class="text-warning">Zariadenie sa ešte neprihlásilo</span>
+					{/if}
+				</td>
 			</tr>
 			<tr>
 				<th>Heslo</th><td>{$device['info']->password}</td>
@@ -51,7 +65,7 @@
 								{$v->description}
 							</td>
 							<td>
-								{$v->last_out_value}
+								{$v->last_out_value|number:2,',',''}
 							</td>
 							<td>
 								{$v->value_type->unit} ({$v->value_type->shortcut})
